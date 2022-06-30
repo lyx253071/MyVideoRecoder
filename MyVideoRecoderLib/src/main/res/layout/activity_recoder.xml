@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.example.myvideorecoderlib.recoder.RecordView
+        android:id="@+id/recordView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:autoOpen="true"
+        app:bitRate="512"
+        app:facing="FRONT"
+        app:frameRate="15"
+        app:videoHeight="480"
+        app:videoWidth="720" />
+
+    <com.example.myvideorecoderlib.recoder.RecordControllerLayout
+        android:id="@+id/layout_controller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
+    <ImageView
+        android:id="@+id/Mask1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+</FrameLayout>

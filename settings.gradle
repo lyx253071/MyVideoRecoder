@@ -1,0 +1,3 @@
+include ':MyVideoRecoderLib'
+include ':app'
+rootProject.name = "My_Video_Recoder"
