@@ -1,50 +1,25 @@
-package com.example.my_video_recoder;
+package com.example.my_video_recoder.model;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.my_video_recoder.Bean.VideoInfo;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ScannerAnsyTask extends AsyncTask<Void, Integer, List<VideoInfo>> {
-    private List<VideoInfo> videoInfos=new ArrayList<VideoInfo>();
-    private Context context;
+public class ScanFile implements Request {
+    private List<VideoInfo> mVideoInfos;
+    private File mFile;
 
-    public ScannerAnsyTask(Context context) {
-        this.context = context;
+    public ScanFile(List<VideoInfo> videoInfos, File file) {
+        this.mVideoInfos = videoInfos;
+        this.mFile = file;
     }
 
-    @Override
-    protected List<VideoInfo> doInBackground(Void... params) {
-        videoInfos=getVideoFile(videoInfos, context.getExternalFilesDir(null));
-//        videoInfos=filterVideo(videoInfos);
-        Log.i("filemanager","最后的大小"+videoInfos.size());
-        return videoInfos;
-    }
-
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        super.onProgressUpdate(values);
-    }
-
-    @Override
-    protected void onPostExecute(List<VideoInfo> videoInfos) {
-        super.onPostExecute(videoInfos);
-    }
-
-    /**
-     * 获取视频文件
-     * @param list
-     * @param file
-     * @return
-     */
-    private List<VideoInfo> getVideoFile(final List<VideoInfo> list, File file) {
-
+    private void getVideoFile(final List<VideoInfo> list, File file) {
         file.listFiles(new FileFilter() {
-
             @Override
             public boolean accept(File file) {
 
@@ -95,27 +70,33 @@ public class ScannerAnsyTask extends AsyncTask<Void, Integer, List<VideoInfo>> {
                 return false;
             }
         });
-
-        return list;
     }
 
-    /**10M=10485760 b,小于10m的过滤掉
-     * 过滤视频文件
-     * @param videoInfos
-     * @return
-     */
-    private List<VideoInfo> filterVideo(List<VideoInfo> videoInfos){
-        List<VideoInfo> newVideos=new ArrayList<VideoInfo>();
-        for(VideoInfo videoInfo:videoInfos){
-            File f=new File(videoInfo.getPath());
-            if(f.exists()&&f.isFile()&&f.length()>10485760){
-                newVideos.add(videoInfo);
-                Log.i("filemanager","文件大小"+f.length());
-            }else {
-                Log.i("filemanager","文件太小或者不存在");
+
+    @Override
+    public void load() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getVideoFile(mVideoInfos, mFile);
+                if(mVideoInfos.size()>0){
+                    mLoadResult.succeed();
+                }
+                else{
+                    mLoadResult.failed();
+                }
             }
-        }
-        return newVideos;
+        }).start();
     }
-}
 
+    public interface LoadResult{
+        public void succeed();
+        public void failed();
+    }
+    private LoadResult mLoadResult;
+
+    public void setLoadResult(LoadResult l){
+        this.mLoadResult = l;
+    }
+
+}

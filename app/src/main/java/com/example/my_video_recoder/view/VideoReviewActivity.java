@@ -1,4 +1,4 @@
-package com.example.my_video_recoder;
+package com.example.my_video_recoder.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -13,21 +13,29 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import com.example.my_video_recoder.R;
+import com.example.my_video_recoder.VideoDataAdapter;
+import com.example.my_video_recoder.Bean.VideoInfo;
+import com.example.my_video_recoder.presenter.VideoPresenter;
 
-public class VideoReviewActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class VideoReviewActivity extends AppCompatActivity implements VideoReview {
     private ProgressBar mProgressBar;
     private RecyclerView mRecycleView;
     private List<VideoInfo> mVideoSet;
     private VideoDataAdapter mVideoDataAdapter;
+    private VideoPresenter mVideoPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_review);
+        mVideoSet = new ArrayList<>();
+        mVideoPresenter = new VideoPresenter(this,mVideoSet,getApplication().getExternalFilesDir(null));
         initView();
-        startScanTask();
+        mVideoPresenter.loadData();
     }
     private void initView(){
         mProgressBar = findViewById(R.id.mprogressBar);
@@ -36,31 +44,31 @@ public class VideoReviewActivity extends AppCompatActivity {
     }
 
     private void tendToVideo(VideoInfo v){
-        Intent s = new Intent(this,VideoActivity.class);
+        Intent s = new Intent(this, VideoActivity.class);
         s.putExtra("path",v.getPath());
         startActivity(s);
     }
 
-    private void startScanTask(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ScannerAnsyTask ansyTask=new ScannerAnsyTask(VideoReviewActivity.this);
-                    ansyTask.execute();
-                    mVideoSet = ansyTask.get();
-                    Log.d("filemanager", "run: 视频数量为"+mVideoSet.size());
-                    if(mVideoSet!=null){
-                        mHandler.sendEmptyMessage(1);
-                    }
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
+//    private void startScanTask(){
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    ScannerAnsyTask ansyTask=new ScannerAnsyTask(VideoReviewActivity.this);
+//                    ansyTask.execute();
+//                    mVideoSet = ansyTask.get();
+//                    Log.d("filemanager", "run: 视频数量为"+mVideoSet.size());
+//                    if(mVideoSet!=null){
+//                        mHandler.sendEmptyMessage(1);
+//                    }
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+//    }
 
     private Handler mHandler = new Handler(){
         public void handleMessage(android.os.Message msg){
@@ -84,4 +92,11 @@ public class VideoReviewActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public void finished() {
+        mHandler.sendEmptyMessage(1);
+    }
+
+
 }

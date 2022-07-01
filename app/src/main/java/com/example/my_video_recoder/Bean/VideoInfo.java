@@ -1,4 +1,4 @@
-package com.example.my_video_recoder;
+package com.example.my_video_recoder.Bean;
 
 public class VideoInfo {
     private String displayName;
