@@ -55,8 +55,7 @@ public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull VideoDataAdapter.MyViewHolder holder, int position) {
-//        holder.type.setImageResource(R.drawable.video);
-//        holder.type.setImageBitmap(getVideoThumbNail(videoSet.get(position).getPath()));
+        //设置视频缩略图
         Glide.with(mContext).load( Uri.fromFile( new File( mVideoSet.get(position).getPath() ) ) ).apply(options)
                 .into( holder.type);
         holder.fileName.setText(mVideoSet.get(position).getDisplayName());
@@ -70,7 +69,7 @@ public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyVi
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private ImageView type;//文件类型
+        private ImageView type;//文件缩略图
         private TextView fileName;//文件名
         private TextView fileSize;//文件大小
 
@@ -125,7 +124,7 @@ public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyVi
         void click(View view, int position);
     }
     private OnItemClickListener onItemClickListener;
-    //设置监听器
+    //设置点击监听器
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }

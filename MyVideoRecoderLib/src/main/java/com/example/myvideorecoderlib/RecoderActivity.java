@@ -6,17 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.myvideorecoderlib.Utils.ContextManager;
 import com.example.myvideorecoderlib.camera.open.CameraFacing;
 import com.example.myvideorecoderlib.recoder.RecordConfig;
 import com.example.myvideorecoderlib.recoder.RecordControllerLayout;
@@ -42,30 +39,29 @@ public class RecoderActivity extends AppCompatActivity {
     private  RecordView mRecordView;
     private  RecordControllerLayout mController;
     private  ImageView curMask;
-    private  ContextManager mContextManager;
     private  RCCallBack mRCCallback;
 
 
     public static void activityStart(Context context, RecordConfig recordConfig) {
         Intent intent = new Intent(context, RecoderActivity.class);
-        intent.putExtra(MinTime, recordConfig.getmMinTime());
-        intent.putExtra(MaxTime, recordConfig.getmMaxTime());
-        intent.putExtra(VideoWidth,recordConfig.getmVideoWidth());
-        intent.putExtra(VideoHeight, recordConfig.getmVideoHeight());
-        intent.putExtra(FrameRate,recordConfig.getmFrameRate());
-        intent.putExtra(BitRate, recordConfig.getmBitRate());
-        intent.putExtra(CurCamera, recordConfig.getmCamera());
-        intent.putExtra(AutoOpen,recordConfig.ismAutoOpen());
+        intent.putExtra(MinTime, recordConfig.getMinTime());
+        intent.putExtra(MaxTime, recordConfig.getMaxTime());
+        intent.putExtra(VideoWidth,recordConfig.getVideoWidth());
+        intent.putExtra(VideoHeight, recordConfig.getVideoHeight());
+        intent.putExtra(FrameRate,recordConfig.getFrameRate());
+        intent.putExtra(BitRate, recordConfig.getBitRate());
+        intent.putExtra(CurCamera, recordConfig.getCamera());
+        intent.putExtra(AutoOpen,recordConfig.isAutoOpen());
         //通过Intent传递图片（转换成数组）
-        Bitmap mask = recordConfig.getmBitmap();
+        Bitmap mask = recordConfig.getBitmap();
         if(mask!=null){
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            recordConfig.getmBitmap().compress(Bitmap.CompressFormat.PNG, 100, baos);
+            recordConfig.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, baos);
             intent.putExtra("bitmap", baos.toByteArray());
         }
 
-        intent.putExtra(PackgeName,recordConfig.getmPackgeName());
-        intent.putExtra(MaskIDS,recordConfig.getmMaskIDS());
+        intent.putExtra(PackgeName,recordConfig.getPackgeName());
+        intent.putExtra(MaskIDS,recordConfig.getMaskIDS());
 
         context.startActivity(intent);
     }
@@ -73,14 +69,18 @@ public class RecoderActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recoder);
-        mRecordView = findViewById(R.id.recordView);
-        mController = findViewById(R.id.layout_controller);
-        mController.bindRecordView(mRecordView);
-        mContextManager = new ContextManager(this);
-        mRCCallback = RecordConfig.getInstance(this).getmRCCallBack();
-        curMask = findViewById(R.id.Mask1);
-//        curMask.setImageDrawable(getResources().getDrawable(R.drawable.head));
+
+//        setContentView(R.layout.activity_recoder);
+//        mRecordView = findViewById(R.id.recordView);
+//        mController = findViewById(R.id.layout_controller);
+//        mController.bindRecordView(mRecordView);
+//        curMask = findViewById(R.id.Mask1);
+
+        setContentView(R.layout.activity_recoder2);
+        initView();
+
+        mRCCallback = RecordConfig.getInstance(this).getRCCallBack();
+
 
 
         Intent intent = getIntent();
@@ -102,17 +102,14 @@ public class RecoderActivity extends AppCompatActivity {
             bitmap= BitmapFactory.decodeByteArray(bitmapByte, 0, bitmapByte.length, null);
             if(bitmap!=null) curMask.setImageBitmap(bitmap);
         }
-        Context remoteContext = mContextManager.getRemoteContext(packgeName);
-//        int identifier = remoteContext.getResources().getIdentifier("fj", "drawable", "com.example.my_video_recoder");
-//        Log.d(TAG, "maskID: "+identifier);
+
         if(masks.length>0) {
             Log.d(TAG, "mask: "+masks[0]);
-            Log.d(TAG, "context:this"+getApplicationContext()+"---------"+"context:remote"+remoteContext);
-            Resources resources = remoteContext.getResources();
-            Drawable drawable = resources.getDrawable(masks[0]);
-            curMask.setImageDrawable(drawable);
+
+            curMask.setImageDrawable(getResources().getDrawable(masks[0]));
         }
 //        curMask.setImageDrawable(remoteContext.getResources().getDrawable(identifier));
+
         curMask.setVisibility(View.GONE);
         mController.setDuration(minTime,maxTime);
         mRecordView.setCameraFacing(curCamera);
@@ -163,6 +160,7 @@ public class RecoderActivity extends AppCompatActivity {
         });
 
         mRecordView.verifyPermissions(RecoderActivity.this,1);
+        Log.d("Recoder Resources", "onCreate: "+getResources());
     }
 
 
@@ -188,10 +186,12 @@ public class RecoderActivity extends AppCompatActivity {
     }
 
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+    //设置自适应view
+    private void initView(){
+        mRecordView = findViewById(R.id.recordView2);
+        mController = findViewById(R.id.layout_controller2);
+        mController.bindRecordView(mRecordView);
+        curMask = findViewById(R.id.Mask2);
     }
 
 }

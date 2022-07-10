@@ -22,7 +22,7 @@ public class VideoRecoder {
      * @param width
      */
     public void setVideoWidth(int width){
-        mRecordConfig.setmVideoWidth(width);
+        mRecordConfig.setVideoWidth(width);
     }
 
     /**
@@ -30,21 +30,21 @@ public class VideoRecoder {
      * @param height
      */
     public void setVideoHeight(int height){
-        mRecordConfig.setmVideoHeight(height);
+        mRecordConfig.setVideoHeight(height);
     }
     /**
      * 设置视频帧率
      * @param frameRate
      */
     public void setFrame(int frameRate){
-        mRecordConfig.setmFrameRate(frameRate);
+        mRecordConfig.setFrameRate(frameRate);
     }
     /**
      * 设置视频码率
      * @param BitRate
      */
     public void setBitRate(int BitRate){
-        mRecordConfig.setmBitRate(BitRate);
+        mRecordConfig.setBitRate(BitRate);
     }
     /**
      * 设置蒙版
@@ -58,27 +58,27 @@ public class VideoRecoder {
      * @param tag
      */
     public void setAutoOpen(boolean tag){
-        mRecordConfig.setmAutoOpen(tag);
+        mRecordConfig.setAutoOpen(tag);
     }
     /**
      * 设置最长录制时间
      * @param maxTime
      */
     public void setMaxTime(int maxTime){
-        mRecordConfig.setmMaxTime(maxTime);
+        mRecordConfig.setMaxTime(maxTime);
     }
     /**
      * 设置最短录制时间
      * @param minTime
      */
     public void setMinTime(int minTime){
-        mRecordConfig.setmMinTime(minTime);
+        mRecordConfig.setMinTime(minTime);
     }
     /**
      * 设置结果回调
      * @param rCCallBack RCCallBack的接口实现
      */
     public void setCallback(RCCallBack rCCallBack){
-        mRecordConfig.setmRCCallBack(rCCallBack);
+        mRecordConfig.setRCCallBack(rCCallBack);
     }
 }

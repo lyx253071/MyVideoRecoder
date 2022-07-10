@@ -3,10 +3,12 @@ package com.example.my_video_recoder;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.my_video_recoder.view.VideoReviewActivity;
 import com.example.myvideorecoderlib.RCCallBack;
@@ -31,14 +33,12 @@ public class FirstActivity extends AppCompatActivity {
         mRecodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toRecode();
+                toRecord();
             }
         });
     }
 
-    private void toRecode(){
-//        Drawable drawable = getResources().getDrawable(R.drawable.rc2);
-
+    private void toRecord(){
         VideoRecoder videoRecoder = new VideoRecoder(this);
         videoRecoder.setMaxTime(15);
         videoRecoder.addMask(R.drawable.head);
