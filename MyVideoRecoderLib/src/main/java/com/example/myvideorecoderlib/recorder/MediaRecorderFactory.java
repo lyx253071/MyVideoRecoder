@@ -1,4 +1,4 @@
-package com.example.myvideorecoderlib.recoder;
+package com.example.myvideorecoderlib.recorder;
 
 import android.graphics.Point;
 import android.hardware.Camera;

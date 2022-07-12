@@ -15,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.myvideorecoderlib.camera.open.CameraFacing;
-import com.example.myvideorecoderlib.recoder.RecordConfig;
-import com.example.myvideorecoderlib.recoder.RecordControllerLayout;
-import com.example.myvideorecoderlib.recoder.RecordView;
+import com.example.myvideorecoderlib.exception.RecordException;
+import com.example.myvideorecoderlib.exception.ResultCode;
+import com.example.myvideorecoderlib.recorder.RecordConfig;
+import com.example.myvideorecoderlib.recorder.RecordControllerLayout;
+import com.example.myvideorecoderlib.recorder.RecordView;
 
 import java.io.ByteArrayOutputStream;
 
@@ -39,10 +41,16 @@ public class RecoderActivity extends AppCompatActivity {
     private  RecordView mRecordView;
     private  RecordControllerLayout mController;
     private  ImageView curMask;
-    private  RCCallBack mRCCallback;
+    private RecordCallBack mRecordCallback;
 
-
-    public static void activityStart(Context context, RecordConfig recordConfig) {
+    /**
+     *
+     * @brief               外部启动录制界面的方法
+     * @param context       上下文环境
+     * @param recordConfig  配置信息
+     * @return
+     */
+    public static void activityStart(Context context, RecordConfig recordConfig) throws RecordException {
         Intent intent = new Intent(context, RecoderActivity.class);
         intent.putExtra(MinTime, recordConfig.getMinTime());
         intent.putExtra(MaxTime, recordConfig.getMaxTime());
@@ -63,7 +71,15 @@ public class RecoderActivity extends AppCompatActivity {
         intent.putExtra(PackgeName,recordConfig.getPackgeName());
         intent.putExtra(MaskIDS,recordConfig.getMaskIDS());
 
-        context.startActivity(intent);
+        if(recordConfig.getRecordCallBack()==null) {
+            RecordException recordException = new RecordException();
+            ResultCode lackTheCallback = ResultCode.LACK_THE_CALLBACK;
+            recordException.setCode(lackTheCallback.code());
+            recordException.setMsg("videoRecorder  "+lackTheCallback+"  RecordCallback");
+            throw recordException;
+        }
+
+        else context.startActivity(intent);
     }
 
     @Override
@@ -79,7 +95,7 @@ public class RecoderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recoder2);
         initView();
 
-        mRCCallback = RecordConfig.getInstance(this).getRCCallBack();
+        mRecordCallback = RecordConfig.getInstance(this).getRecordCallBack();
 
 
 
@@ -127,17 +143,22 @@ public class RecoderActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStopRecord(long duration,String filePath) {
+            public void onStopRecord(long duration,String filePath){
                 Toast.makeText(RecoderActivity.this, "结束录制，时长" + duration, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onStopRecord: 存储在"+filePath);
-                if(mRCCallback!=null) mRCCallback.succed(filePath);
+                if(mRecordCallback !=null) mRecordCallback.succed(filePath);
             }
-
 
             @Override
             public void onCancelRecord() {
                 Toast.makeText(RecoderActivity.this, "取消录制", Toast.LENGTH_SHORT).show();
-                if(mRCCallback!=null) mRCCallback.failed();
+
+            }
+
+            @Override
+            public void onFailed(int code, String msg) {
+                if(mRecordCallback !=null) mRecordCallback.failed(code,msg);
+                finish();
             }
         });
 
@@ -159,6 +180,14 @@ public class RecoderActivity extends AppCompatActivity {
             }
         });
 
+        mRecordView.setOnRecord(new RecordView.OnRecord() {
+            @Override
+            public void onFailed(int code, String msg) {
+                if(mRecordCallback !=null) mRecordCallback.failed(code,msg);
+                finish();
+            }
+        });
+
         mRecordView.verifyPermissions(RecoderActivity.this,1);
         Log.d("Recoder Resources", "onCreate: "+getResources());
     }
@@ -169,10 +198,11 @@ public class RecoderActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode==1){
+            mRecordView.openCamera();
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                mRecordView.openCamera();
                 mRecordView.setReady();
             }
+
         }
     }
 

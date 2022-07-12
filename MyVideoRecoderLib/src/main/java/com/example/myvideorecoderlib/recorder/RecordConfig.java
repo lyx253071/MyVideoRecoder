@@ -1,9 +1,9 @@
-package com.example.myvideorecoderlib.recoder;
+package com.example.myvideorecoderlib.recorder;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.example.myvideorecoderlib.RCCallBack;
+import com.example.myvideorecoderlib.RecordCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class RecordConfig {
     private Context mContext;
     private String mPackgeName;
     private List<Integer> mMaskID;
-    private RCCallBack mRCCallBack;
+    private RecordCallBack mRecordCallBack;
 
     private static volatile RecordConfig recordConfig;
 
@@ -182,11 +182,11 @@ public class RecordConfig {
         for(int i=0;i<count;i++) res[i]=mMaskID.get(i);
         return res;}
     //获取录制结束的回调方法
-    public RCCallBack getRCCallBack() {
-        return mRCCallBack;
+    public RecordCallBack getRecordCallBack() {
+        return mRecordCallBack;
     }
     //设置录制结束的回调方法
-    public void setRCCallBack(RCCallBack mRCCallBack) {
-        this.mRCCallBack = mRCCallBack;
+    public void setRecordCallBack(RecordCallBack mRecordCallBack) {
+        this.mRecordCallBack = mRecordCallBack;
     }
 }

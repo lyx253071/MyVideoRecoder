@@ -1,24 +1,47 @@
 package com.example.my_video_recoder.model;
 
-import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.my_video_recoder.Bean.VideoInfo;
+import com.example.my_video_recoder.presenter.VideoPresenter;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class ScanFile implements Request {
+ /**
+  *
+  * @ClassName:      ScanFile
+  * @Description:    获取指定文件夹的视频数据
+  * @Author:         Lyx25301
+  * @Version:        1.0
+  */
+public class ScanFile implements LoadData {
     private List<VideoInfo> mVideoInfos;
     private File mFile;
+    private ExecutorService mThreadPool;
 
     public ScanFile(List<VideoInfo> videoInfos, File file) {
         this.mVideoInfos = videoInfos;
         this.mFile = file;
+        mThreadPool = Executors.newSingleThreadExecutor();
     }
 
-    private void getVideoFile(final List<VideoInfo> list, File file) {
+     /**
+      *
+      * @brief 获取指定文件夹的视频文件
+      * @param  list<VideoInfo>  视频文件集合
+      * @param  file                  指定文件夹
+      * @return
+      */
+    private void getVideoFile(final List<VideoInfo> list, @NonNull  File file) throws Exception {
+        if(file==null || list==null){
+            throw new Exception("参数非法");
+        }
         file.listFiles(new FileFilter() {
             @Override
             public boolean accept(File file) {
@@ -56,43 +79,77 @@ public class ScanFile implements Request {
                             || name.equalsIgnoreCase(".xvid")) {
                         VideoInfo video = new VideoInfo();
                         file.getUsableSpace();
-                        video.setDisplayName(file.getName());
-                        video.setPath(file.getAbsolutePath());
-                        video.setSize(file.length());
-                        Log.i("filemanager","path"+video.getPath());
-                        list.add(video);
+                        if(file.length()>0){
+                            video.setDisplayName(file.getName());
+                            video.setPath(file.getAbsolutePath());
+                            video.setSize(file.length());
+                            Log.i("filemanager","path"+video.getPath());
+                            list.add(video);
+                        }
                         return true;
                     }
                     //判断是不是目录
                 } else if (file.isDirectory()) {
-                    getVideoFile(list, file);
+                    try {
+                        getVideoFile(list, file);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 return false;
             }
         });
     }
 
-
+    //加载数据
     @Override
-    public void load() {
-        new Thread(new Runnable() {
+    public void load()  {
+//        new Thread().start();
+        Runnable loadTask = new Runnable() {
             @Override
             public void run() {
-                getVideoFile(mVideoInfos, mFile);
-                if(mVideoInfos.size()>0){
+                Log.d("runable", "run: start");
+                try {
+                    getVideoFile(mVideoInfos, mFile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mLoadResult.failed(7,e.getMessage());
+                }
+
+                try{
                     mLoadResult.succeed();
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("ScanFile exception", "LoadResult Callback设置异常");
                 }
-                else{
-                    mLoadResult.failed();
-                }
+
+                Log.d("runable", "run: end");
+
             }
-        }).start();
+        };
+        mThreadPool.submit(loadTask);
     }
 
-    public interface LoadResult{
-        public void succeed();
-        public void failed();
+    /**
+     *
+     * @brief 取消加载数据的任务
+     */
+    public void cancle() {
+        mThreadPool.shutdownNow();
+        Log.d("runable", "cancle: ");
     }
+
+    /**
+     *
+     * @brief 加载结果的回调方法
+     */
+    public interface LoadResult{
+        //加载成功
+        public void succeed();
+        //加载失败
+        public void failed(int code,String msg);
+    }
+
     private LoadResult mLoadResult;
 
     public void setLoadResult(LoadResult l){

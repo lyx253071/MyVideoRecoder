@@ -18,7 +18,9 @@
         android:required="false" />
 
     <application>
-        <activity android:name=".RecoderActivity"></activity>
+        <activity android:name=".RecoderActivity"
+            android:screenOrientation="portrait"
+            ></activity>
     </application>
 
 </manifest>

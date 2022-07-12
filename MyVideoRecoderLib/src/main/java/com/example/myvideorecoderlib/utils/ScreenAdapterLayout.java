@@ -1,4 +1,4 @@
-package com.example.myvideorecoderlib.Utils;
+package com.example.myvideorecoderlib.utils;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,7 +6,13 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-
+ /**
+  *
+  * @ClassName:      ScreenAdapterLayout
+  * @Description:    屏幕适配的布局文件
+  * @Author:         lyx25301
+  * @Version:        1.0
+  */
 public class ScreenAdapterLayout extends FrameLayout {
     private boolean flag;
     public ScreenAdapterLayout(Context context) {

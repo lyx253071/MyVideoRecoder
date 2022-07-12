@@ -1,18 +1,19 @@
 package com.example.my_video_recoder;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.my_video_recoder.view.VideoReviewActivity;
-import com.example.myvideorecoderlib.RCCallBack;
-import com.example.myvideorecoderlib.VideoRecoder;
+import com.example.myvideorecoderlib.RecordCallBack;
+import com.example.myvideorecoderlib.VideoRecorder;
 
 public class FirstActivity extends AppCompatActivity {
     private Button mRecodeButton;
@@ -31,32 +32,39 @@ public class FirstActivity extends AppCompatActivity {
             }
         });
         mRecodeButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 toRecord();
             }
         });
     }
-
+    //跳转到录制页面
     private void toRecord(){
-        VideoRecoder videoRecoder = new VideoRecoder(this);
-        videoRecoder.setMaxTime(15);
-        videoRecoder.addMask(R.drawable.head);
-        videoRecoder.setCallback(new RCCallBack() {
+        VideoRecorder videoRecorder = new VideoRecorder(this,RecorderCfg.class);
+//        videoRecorder.setMaxTime(15);
+
+//        videoRecorder.addMask(R.drawable.app_record_mask_head);
+//        videoRecorder.addMask(R.drawable.app_record_mask_rc2);
+
+        videoRecorder.setCallback(new RecordCallBack() {
             @Override
             public void succed(String filePath) {
                 Log.d("TAGcallback", "succed: "+filePath);
             }
 
             @Override
-            public void failed() {
-                Log.d("TAGcallback", "failed: ");
+            public void failed(int code,String msg) {
+                Log.d("TAGcallback", "failed: "+msg);
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
             }
         });
 
-        videoRecoder.startRecod();
+        videoRecorder.startRecod();
+
     }
 
+    //跳转到视频文件页面
     private void toReview(){
 
         Intent intent = new Intent(this, VideoReviewActivity.class);

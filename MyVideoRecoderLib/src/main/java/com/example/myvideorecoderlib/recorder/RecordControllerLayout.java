@@ -1,6 +1,7 @@
-package com.example.myvideorecoderlib.recoder;
+package com.example.myvideorecoderlib.recorder;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
@@ -188,10 +189,25 @@ public class RecordControllerLayout extends FrameLayout implements View.OnClickL
         }
     }
 
+    //获取屏幕方向
+    public boolean getOrientation(){
+        Configuration cf = getResources().getConfiguration();
+        int ori = cf.orientation;
+        if(ori == cf.ORIENTATION_LANDSCAPE){
+            return false;
+        }else if(ori == cf.ORIENTATION_PORTRAIT){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 开始录制
      */
     private void startRecord() {
+        if(!getOrientation()){
+            return;
+        }
         // 如果正在录制，则不处理
         if (mRecordView.isRecording()) {
             return;
@@ -206,7 +222,14 @@ public class RecordControllerLayout extends FrameLayout implements View.OnClickL
             mHandler.removeCallbacks(mDurationCounter);
             mHandler.post(mDurationCounter);
         } else {
-            Toast.makeText(getContext(), R.string.recording_error, Toast.LENGTH_SHORT).show();
+
+//            Toast.makeText(getContext(), R.string.recording_error, Toast.LENGTH_SHORT).show();
+
+//            RecordException recordException = new RecordException();
+//            recordException.setCode(1);
+//            recordException.setMsg("sda");
+//            throw recordException;
+
         }
     }
 
@@ -313,5 +336,10 @@ public class RecordControllerLayout extends FrameLayout implements View.OnClickL
          * 取消录制
          */
         void onCancelRecord();
+
+        /**
+         * 录制失败
+         */
+        void onFailed(int code,String msg);
     }
 }

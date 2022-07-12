@@ -23,13 +23,13 @@ import java.util.List;
 
 public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyViewHolder>{
 
-    private static double M = 1024*1024.0;
+    private static final double M = 1024*1024.0;
     private List<VideoInfo> mVideoSet = new ArrayList<>();
     private Context mContext;
     //glide的相关配置
     RequestOptions options = new RequestOptions()
-            .placeholder(R.drawable.video) //图片加载出来前，显示的图片
-            .fallback( R.drawable.photo); //url为空的时候,显示的图片
+            .placeholder(R.drawable.app_video) //图片加载出来前，显示的图片
+            .fallback( R.drawable.app_photo); //url为空的时候,显示的图片
 //           .error(drawable.img_load_failure);
 
 
@@ -119,11 +119,13 @@ public class VideoDataAdapter extends RecyclerView.Adapter<VideoDataAdapter.MyVi
         return bitmap;
     }
 
-    //设置点击接口
+    //item点击接口
     public interface OnItemClickListener {
+        //点击事件
         void click(View view, int position);
     }
     private OnItemClickListener onItemClickListener;
+
     //设置点击监听器
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;

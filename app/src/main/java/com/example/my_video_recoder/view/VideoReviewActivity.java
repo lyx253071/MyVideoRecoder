@@ -93,10 +93,21 @@ public class VideoReviewActivity extends AppCompatActivity implements VideoRevie
         }
     };
 
+
     @Override
-    public void finished() {
+    protected void onDestroy() {
+        super.onDestroy();
+        mVideoPresenter.cancleLoad();
+    }
+
+    @Override
+    public void onSuccess() {
         mHandler.sendEmptyMessage(1);
     }
 
-
+    @Override
+    public void onFailed(int code, String msg) {
+        Log.d("fail Message", "onFailed: "+msg);
+        mProgressBar.setVisibility(View.GONE);
+    }
 }

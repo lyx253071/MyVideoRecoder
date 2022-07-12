@@ -1,26 +1,23 @@
-package com.example.myvideorecoderlib.recoder;
+package com.example.myvideorecoderlib.recorder;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.TypedArray;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.myvideorecoderlib.MaskListener;
-import com.example.myvideorecoderlib.R;
 import com.example.myvideorecoderlib.camera.CameraManager;
 import com.example.myvideorecoderlib.camera.open.CameraFacing;
+import com.example.myvideorecoderlib.exception.ResultCode;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -165,9 +162,10 @@ public class RecordView extends SurfaceView {
     public void openCamera() {
         // 打开相机前确认是否有权限
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            Toast.makeText(getContext(), R.string.open_camera_error, Toast.LENGTH_SHORT).show();
-            Log.d("Permission", "openCamera: faile");
-            return;
+//            Toast.makeText(getContext(), R.string.open_camera_error, Toast.LENGTH_SHORT).show();
+            ResultCode cameraDeny = ResultCode.CAMERA_DENY;
+            mOnRecord.onFailed(cameraDeny.code(),cameraDeny.message());
+            return ;
         }
         if (mSurfaceEnable) {
             // 先关闭之前的相机
@@ -181,7 +179,9 @@ public class RecordView extends SurfaceView {
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("Permission", "openCamera: "+e);
-                Toast.makeText(getContext(), R.string.open_camera_error, Toast.LENGTH_SHORT).show();
+                ResultCode cameraInitError = ResultCode.CAMERA_INIT_ERROR;
+                mOnRecord.onFailed(cameraInitError.code(),cameraInitError.message()+e.getMessage());
+//                Toast.makeText(getContext(), R.string.open_camera_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -204,7 +204,9 @@ public class RecordView extends SurfaceView {
     public boolean startRecord() {
         // 录制前确认是否有权限
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
-            Toast.makeText(getContext(), R.string.start_record_error, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), R.string.start_record_error, Toast.LENGTH_SHORT).show();
+            ResultCode micsDeny = ResultCode.MICS_DENY;
+            mOnRecord.onFailed(micsDeny.code(),micsDeny.message());
             return false;
         }
         // 先停止之前的
@@ -236,6 +238,8 @@ public class RecordView extends SurfaceView {
             } catch (Exception e) {
                 e.printStackTrace();
                 camera.lock();
+                ResultCode mediarecorderInitError = ResultCode.MEDIARECORDER_INIT_ERROR;
+                mOnRecord.onFailed(mediarecorderInitError.code(),mediarecorderInitError.message()+e.getMessage());
             }
         } else {
             Log.w("RecordView", "========== open camera first =========");
@@ -254,6 +258,8 @@ public class RecordView extends SurfaceView {
                 mVideoRecorder.reset();
                 mVideoRecorder.release();
             } catch (Exception e) {
+                ResultCode mediarecorderStopError = ResultCode.MEDIARECORDER_STOP_ERROR;
+                mOnRecord.onFailed(mediarecorderStopError.code(),mediarecorderStopError.message()+e.getMessage());
             }
             Camera camera = mCameraManager.getCamera();
             if (camera != null) {
@@ -283,6 +289,7 @@ public class RecordView extends SurfaceView {
 
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
         }
 
         @Override
@@ -472,6 +479,29 @@ public class RecordView extends SurfaceView {
     public void setMaskListener(MaskListener maskListener) {
         this.mMaskListener = maskListener;
     }
+
+    //启动录制时异常的回调接口
+    public interface OnRecord {
+
+        /**
+         * 录制失败
+         */
+        void onFailed(int code,String msg);
+    }
+
+    private OnRecord mOnRecord;
+
+    public OnRecord getOnRecord() {
+        return mOnRecord;
+    }
+
+    public void setOnRecord(OnRecord mOnRecord) {
+        this.mOnRecord = mOnRecord;
+    }
+
+
+
+
 
 
 }

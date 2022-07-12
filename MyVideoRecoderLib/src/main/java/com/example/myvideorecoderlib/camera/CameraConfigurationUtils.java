@@ -197,11 +197,11 @@ public final class CameraConfigurationUtils {
             if (parameters.getVideoStabilization()) {
                 Log.i(TAG, "Video stabilization already enabled");
             } else {
-                Log.i(TAG, "Enabling video stabilization...");
+                Log.i(TAG, "Enabling app_video stabilization...");
                 parameters.setVideoStabilization(true);
             }
         } else {
-            Log.i(TAG, "This device does not support video stabilization");
+            Log.i(TAG, "This device does not support app_video stabilization");
         }
     }
 
