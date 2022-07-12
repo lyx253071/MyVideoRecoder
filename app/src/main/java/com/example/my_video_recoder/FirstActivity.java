@@ -4,7 +4,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,7 +40,13 @@ public class FirstActivity extends AppCompatActivity {
     }
     //跳转到录制页面
     private void toRecord(){
-        VideoRecorder videoRecorder = new VideoRecorder(this,RecorderCfg.class);
+        VideoRecorder videoRecorder = new VideoRecorder(this);
+
+//        videoRecorder.setVideoHeight(1920);
+//        videoRecorder.setVideoHeight(1080);
+
+        videoRecorder = new VideoRecorder(this,RecorderCfg.class);
+
 //        videoRecorder.setMaxTime(15);
 
 //        videoRecorder.addMask(R.drawable.app_record_mask_head);

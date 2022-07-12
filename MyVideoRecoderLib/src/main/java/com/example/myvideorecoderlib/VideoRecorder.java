@@ -1,13 +1,11 @@
 package com.example.myvideorecoderlib;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import com.example.myvideorecoderlib.exception.RecordException;
 import com.example.myvideorecoderlib.recorder.RecordConfig;
@@ -15,6 +13,13 @@ import com.example.myvideorecoderlib.utils.ReflectObjectUtils;
 
 import java.util.Map;
 
+ /**
+  *
+  * @ClassName:      VideoRecorder
+  * @Description:    录制视频的对外接口类
+  * @Author:         lyx253071
+  * @Version:        1.0
+  */
 public class VideoRecorder {
     //获取配置类信息的标签
     private static final String CUSTOM_CAMERA = "CUSTOM_CAMERA";

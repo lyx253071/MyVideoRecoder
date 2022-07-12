@@ -13,13 +13,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
             android:id="@+id/recordView2"
             android:layout_width="108dp"
             android:layout_height="192dp"
-            android:layout_gravity="center"
-            app:autoOpen="true"
-            app:bitRate="512"
-            app:facing="FRONT"
-            app:frameRate="15"
-            app:videoHeight="480"
-            app:videoWidth="720" />
+            android:layout_gravity="center" />
 
         <ImageView
             android:id="@+id/Mask2"

@@ -23,6 +23,13 @@ import com.example.myvideorecoderlib.recorder.RecordView;
 
 import java.io.ByteArrayOutputStream;
 
+ /**
+  *
+  * @ClassName:      RecoderActivity
+  * @Description:    录制视频的Activity
+  * @Author:         lyx253071
+  * @Version:        1.0
+  */
 public class RecoderActivity extends AppCompatActivity {
     private static String TAG = "RecoderActivity";
 
@@ -86,14 +93,14 @@ public class RecoderActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        setContentView(R.layout.activity_recoder);
-//        mRecordView = findViewById(R.id.recordView);
-//        mController = findViewById(R.id.layout_controller);
-//        mController.bindRecordView(mRecordView);
-//        curMask = findViewById(R.id.Mask1);
+        setContentView(R.layout.activity_recoder);
+        mRecordView = findViewById(R.id.recordView);
+        mController = findViewById(R.id.layout_controller);
+        mController.bindRecordView(mRecordView);
+        curMask = findViewById(R.id.Mask1);
 
-        setContentView(R.layout.activity_recoder2);
-        initView();
+//        setContentView(R.layout.activity_recoder2);
+//        initView();
 
         mRecordCallback = RecordConfig.getInstance(this).getRecordCallBack();
 
@@ -104,7 +111,7 @@ public class RecoderActivity extends AppCompatActivity {
         int minTime = intent.getIntExtra(MinTime,-1);
         int maxTime = intent.getIntExtra(MaxTime,300);
         int videoWidth = intent.getIntExtra(VideoWidth,1280);
-        int videoHeight = intent.getIntExtra(VideoWidth,720);
+        int videoHeight = intent.getIntExtra(VideoHeight,720);
         int frameRate = intent.getIntExtra(FrameRate,20);
         int bitRate = intent.getIntExtra(BitRate,512);
         boolean autoOpen = intent.getBooleanExtra(AutoOpen,false);

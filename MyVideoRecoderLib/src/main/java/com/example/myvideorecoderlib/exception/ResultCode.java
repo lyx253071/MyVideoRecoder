@@ -1,5 +1,12 @@
 package com.example.myvideorecoderlib.exception;
 
+ /**
+  *
+  * @ClassName:      ResultCode
+  * @Description:    录制结果的枚举类
+  * @Author:         lyx253071
+  * @Version:        1.0
+  */
 public enum ResultCode {
 
     /** 结果信息 */

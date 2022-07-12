@@ -31,8 +31,6 @@ import java.util.regex.Pattern;
 
 /**
  * Utility methods for configuring the Android camera.
- *
- * @author Sean Owen
  */
 @SuppressWarnings("deprecation") // camera APIs
 public final class CameraConfigurationUtils {

@@ -9,8 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 视频录制的配置类（单例）
+ *
  */
+ /**
+  *
+  * @ClassName:      RecordConfig
+  * @Description:    视频录制的初始化配置类（单例）
+  * @Author:         lyx253071
+  * @Version:        1.0
+  */
 public class RecordConfig {
     /**
      * 后置相机

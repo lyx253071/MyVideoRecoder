@@ -19,6 +19,13 @@ import androidx.annotation.Nullable;
 import com.example.myvideorecoderlib.R;
 import com.example.myvideorecoderlib.camera.open.CameraFacing;
 
+ /**
+  *
+  * @ClassName:      RecordControllerLayout
+  * @Description:    自定义的控制器View 可在XML文件中引入
+  * @Author:         lyx253071
+  * @Version:        1.0
+  */
 public class RecordControllerLayout extends FrameLayout implements View.OnClickListener {
 
 

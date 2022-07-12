@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
  /**
   *
   * @ClassName:      RecordException
-  * @Description:    返回录制的异常信息
+  * @Description:    描述录制的异常信息
   * @Author:         lyx253071
   */
 public class RecordException extends Exception {

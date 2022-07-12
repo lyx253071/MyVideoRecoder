@@ -23,7 +23,13 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
+ /**
+  *
+  * @ClassName:      RecordView
+  * @Description:    自定义的视频录制 View,可以在Xml文件中引入
+  * @Author:         lyx253071
+  * @Version:        1.0
+  */
 public class RecordView extends SurfaceView {
 
     /**

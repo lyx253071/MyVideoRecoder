@@ -54,6 +54,7 @@ public final class MediaRecorderFactory {
      */
     public static MediaRecorder newCustomConfigInstance(@NonNull Camera camera, @NonNull Camera.Parameters parameters, int resolutionX, int resolutionY,
                                                         int frameRate, int bitRate) {
+        Log.d("SizeValue", "newCustomConfigInstance: "+resolutionX+"===="+resolutionY);
         MediaRecorder mediaRecorder = new MediaRecorder();
         mediaRecorder.setCamera(camera);
         //设置视频录制过程中所录制的音频来自手机的麦克风
@@ -130,6 +131,7 @@ public final class MediaRecorderFactory {
      * @return
      */
     public static Point findCloseSizeValue(Camera.Parameters parameters, Point targetResolution) {
+        Log.d("target SizeValue", "findCloseSizeValue: "+targetResolution.x +"===="+targetResolution.y);
         List<Camera.Size> rawSupportedSizes = parameters.getSupportedPreviewSizes();
         if (rawSupportedSizes == null) {
             Log.w("MediaRecorderFactory", "Device returned no supported preview sizes; using default");
@@ -159,6 +161,7 @@ public final class MediaRecorderFactory {
         if (resultSize == null) {
             resultSize = parameters.getPreviewSize();
         }
+        Log.d("final SizeValue", "findCloseSizeValue: "+resultSize.width+"===="+resultSize.height);
         return new Point(resultSize.width, resultSize.height);
     }
 }
