@@ -3,6 +3,7 @@ package com.example.my_video_recoder.presenter;
 import androidx.annotation.MainThread;
 
 import com.example.my_video_recoder.Bean.VideoInfo;
+import com.example.my_video_recoder.LoadResult;
 import com.example.my_video_recoder.model.LoadData;
 import com.example.my_video_recoder.model.ScanFile;
 import com.example.my_video_recoder.view.VideoReview;
@@ -33,33 +34,26 @@ public class VideoPresenter {
 
     //获取目录下的视频数据并展示
     public void loadData(){
-        if(mLoadData instanceof ScanFile){
-            ScanFile task = (ScanFile) mLoadData;
-            task.setLoadResult(new ScanFile.LoadResult() {
-                @Override
-                @MainThread
-                public void succeed() {
-                    mVideoReview.onSuccess();
-                }
+        mLoadData.setLoadResultListener(new LoadResult() {
+            @Override
+            @MainThread
+            public void succeed() {
+                mVideoReview.onSuccess();
+            }
 
-                @Override
-                @MainThread
-                public void failed(int code ,String msg) {
-                    mVideoReview.onFailed(code,msg);
-                }
-            });
-            task.load();
-        }
+            @Override
+            @MainThread
+            public void failed(int code ,String msg) {
+                mVideoReview.onFailed(code,msg);
+            }
+        });
+        mLoadData.load();
 
     }
 
     //取消获取数据的任务
     public void cancleLoad() {
-        if(mLoadData instanceof ScanFile){
-            ScanFile task = (ScanFile) mLoadData;
-            task.cancle();
-        }
-
+        mLoadData.cancle();
     }
 
 }

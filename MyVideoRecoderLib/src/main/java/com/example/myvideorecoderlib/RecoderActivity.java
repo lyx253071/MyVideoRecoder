@@ -93,14 +93,14 @@ public class RecoderActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_recoder);
-        mRecordView = findViewById(R.id.recordView);
-        mController = findViewById(R.id.layout_controller);
-        mController.bindRecordView(mRecordView);
-        curMask = findViewById(R.id.Mask1);
+//        setContentView(R.layout.activity_recoder);
+//        mRecordView = findViewById(R.id.recordView);
+//        mController = findViewById(R.id.layout_controller);
+//        mController.bindRecordView(mRecordView);
+//        curMask = findViewById(R.id.Mask1);
 
-//        setContentView(R.layout.activity_recoder2);
-//        initView();
+        setContentView(R.layout.activity_recoder2);
+        initView();
 
         mRecordCallback = RecordConfig.getInstance(this).getRecordCallBack();
 

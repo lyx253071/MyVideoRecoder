@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.my_video_recoder.Bean.VideoInfo;
-import com.example.my_video_recoder.presenter.VideoPresenter;
+import com.example.my_video_recoder.LoadResult;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -24,6 +24,7 @@ public class ScanFile implements LoadData {
     private List<VideoInfo> mVideoInfos;
     private File mFile;
     private ExecutorService mThreadPool;
+     private LoadResult mLoadResult;
 
     public ScanFile(List<VideoInfo> videoInfos, File file) {
         this.mVideoInfos = videoInfos;
@@ -33,15 +34,16 @@ public class ScanFile implements LoadData {
 
      /**
       *
-      * @brief 获取指定文件夹的视频文件
-      * @param  list<VideoInfo>  视频文件集合
-      * @param  file                  指定文件夹
+      * @brief                          获取指定文件夹的视频文件
+      * @param  list<VideoInfo>         视频文件集合
+      * @param  file                    指定文件夹
       * @return
       */
     private void getVideoFile(final List<VideoInfo> list, @NonNull  File file) throws Exception {
         if(file==null || list==null){
             throw new Exception("参数非法");
         }
+
         file.listFiles(new FileFilter() {
             @Override
             public boolean accept(File file) {
@@ -86,6 +88,7 @@ public class ScanFile implements LoadData {
                             Log.i("filemanager","path"+video.getPath());
                             list.add(video);
                         }
+
                         return true;
                     }
                     //判断是不是目录
@@ -113,7 +116,8 @@ public class ScanFile implements LoadData {
                     getVideoFile(mVideoInfos, mFile);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mLoadResult.failed(7,e.getMessage());
+                    mLoadResult.failed(10007,e.getMessage());
+                    return ;
                 }
 
                 try{
@@ -130,30 +134,22 @@ public class ScanFile implements LoadData {
         mThreadPool.submit(loadTask);
     }
 
-    /**
-     *
-     * @brief 取消加载数据的任务
-     */
+     @Override
+     public void setLoadResultListener(LoadResult loadResultListener) {
+         this.mLoadResult = loadResultListener;
+     }
+
+
+     /**
+      * @brief 取消加载数据的任务
+      */
+     @Override
     public void cancle() {
         mThreadPool.shutdownNow();
         Log.d("runable", "cancle: ");
     }
 
-    /**
-     *
-     * @brief 加载结果的回调方法
-     */
-    public interface LoadResult{
-        //加载成功
-        public void succeed();
-        //加载失败
-        public void failed(int code,String msg);
-    }
 
-    private LoadResult mLoadResult;
 
-    public void setLoadResult(LoadResult l){
-        this.mLoadResult = l;
-    }
 
 }
